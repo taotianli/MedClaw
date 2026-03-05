@@ -1,7 +1,7 @@
 {
-  "name": "nanoclaw",
-  "version": "1.2.6",
-  "description": "Personal Claude assistant. Lightweight, secure, customizable.",
+  "name": "medclaw",
+  "version": "1.0.0",
+  "description": "AI-powered medical analysis assistant for medical imaging and genomic data.",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

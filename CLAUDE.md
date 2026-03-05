@@ -1,10 +1,26 @@
-# NanoClaw
+# MedClaw
 
-Personal Claude assistant. See [README.md](README.md) for philosophy and setup. See [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) for architecture decisions.
+AI-powered medical analysis assistant for medical imaging and genomic data. See [README.md](README.md) for philosophy and setup.
 
 ## Quick Context
 
-Single Node.js process with skill-based channel system. Channels (WhatsApp, Telegram, Slack, Discord, Gmail) are skills that self-register at startup. Messages route to Claude Agent SDK running in containers (Linux VMs). Each group has isolated filesystem and memory.
+Single Node.js process with skill-based channel system. Channels (WhatsApp, Telegram, Slack, Discord, Gmail) are skills that self-register at startup. Messages route to Claude Agent SDK running in containers with medical analysis tools. Each group has isolated filesystem and memory.
+
+## Medical Tools Available
+
+MedClaw containers include pre-installed medical analysis tools:
+
+**Imaging:** pydicom, nibabel, SimpleITK, scikit-image, opencv-python, Pillow
+**Genomics:** BioPython, pysam, PyVCF3, scikit-bio
+**Clinical:** fhir.resources, hl7apy
+**Analysis:** numpy, scipy, pandas, matplotlib
+
+Utility scripts in `container/medical-tools/`:
+- `dicom_utils.py` - DICOM file processing and analysis
+- `nifti_utils.py` - NIfTI neuroimaging data processing
+- `genomics_utils.py` - VCF, BAM, FASTA analysis
+- `segmentation_utils.py` - Medical image segmentation
+- `clinical_utils.py` - FHIR and HL7 data handling
 
 ## Key Files
 
@@ -39,25 +55,35 @@ Run commands directly—don't tell the user to run them.
 ```bash
 npm run dev          # Run with hot reload
 npm run build        # Compile TypeScript
-./container/build.sh # Rebuild agent container
+./container/build.sh # Rebuild agent container with medical tools
 ```
 
 Service management:
 ```bash
 # macOS (launchd)
-launchctl load ~/Library/LaunchAgents/com.nanoclaw.plist
-launchctl unload ~/Library/LaunchAgents/com.nanoclaw.plist
-launchctl kickstart -k gui/$(id -u)/com.nanoclaw  # restart
+launchctl load ~/Library/LaunchAgents/com.medclaw.plist
+launchctl unload ~/Library/LaunchAgents/com.medclaw.plist
+launchctl kickstart -k gui/$(id -u)/com.medclaw  # restart
 
 # Linux (systemd)
-systemctl --user start nanoclaw
-systemctl --user stop nanoclaw
-systemctl --user restart nanoclaw
+systemctl --user start medclaw
+systemctl --user stop medclaw
+systemctl --user restart medclaw
 ```
+
+## Medical Data Security
+
+- All patient data stays in isolated containers
+- Use encrypted volumes for sensitive medical data
+- Configure appropriate mount points for medical data directories
+- Implement proper anonymization before sharing results
+- Follow HIPAA/GDPR compliance requirements for your use case
 
 ## Troubleshooting
 
-**WhatsApp not connecting after upgrade:** WhatsApp is now a separate skill, not bundled in core. Run `/add-whatsapp` (or `npx tsx scripts/apply-skill.ts .claude/skills/add-whatsapp && npm run build`) to install it. Existing auth credentials and groups are preserved.
+**Medical tools not available:** Rebuild the container with `./container/build.sh` to install Python medical packages.
+
+**Large imaging files:** Configure appropriate memory limits for Docker/container runtime. Recommend 16GB+ RAM for medical imaging analysis.
 
 ## Container Build Cache
 

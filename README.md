@@ -1,194 +1,261 @@
 <p align="center">
-  <img src="assets/nanoclaw-logo.png" alt="NanoClaw" width="400">
+  <img src="assets/nanoclaw-logo.png" alt="MedClaw" width="400">
 </p>
 
 <p align="center">
-  An AI assistant that runs agents securely in their own containers. Lightweight, built to be easily understood and completely customized for your needs.
+  An AI-powered medical analysis assistant for medical imaging and genomic data. Built on secure containerized agents with specialized tools for healthcare research and clinical workflows.
 </p>
 
 <p align="center">
-  <a href="https://nanoclaw.dev">nanoclaw.dev</a>&nbsp; • &nbsp;
   <a href="README_zh.md">中文</a>&nbsp; • &nbsp;
-  <a href="https://discord.gg/VDdww8qS42"><img src="https://img.shields.io/discord/1470188214710046894?label=Discord&logo=discord&v=2" alt="Discord" valign="middle"></a>&nbsp; • &nbsp;
-  <a href="repo-tokens"><img src="repo-tokens/badge.svg" alt="34.9k tokens, 17% of context window" valign="middle"></a>
+  <a href="https://discord.gg/VDdww8qS42"><img src="https://img.shields.io/discord/1470188214710046894?label=Discord&logo=discord&v=2" alt="Discord" valign="middle"></a>
 </p>
-Using Claude Code, NanoClaw can dynamically rewrite its code to customize its feature set for your needs.
 
-**New:** First AI assistant to support [Agent Swarms](https://code.claude.com/docs/en/agent-teams). Spin up teams of agents that collaborate in your chat.
+MedClaw leverages Claude Code to provide intelligent analysis of medical imaging (DICOM, NIfTI, microscopy) and genomic data (VCF, FASTQ, BAM), with support for clinical workflows and research pipelines.
 
-## Why I Built NanoClaw
+## Why MedClaw
 
-[OpenClaw](https://github.com/openclaw/openclaw) is an impressive project, but I wouldn't have been able to sleep if I had given complex software I didn't understand full access to my life. OpenClaw has nearly half a million lines of code, 53 config files, and 70+ dependencies. Its security is at the application level (allowlists, pairing codes) rather than true OS-level isolation. Everything runs in one Node process with shared memory.
+Medical data analysis requires specialized tools, secure handling of sensitive patient information, and integration with clinical workflows. MedClaw provides:
 
-NanoClaw provides that same core functionality, but in a codebase small enough to understand: one process and a handful of files. Claude agents run in their own Linux containers with filesystem isolation, not merely behind permission checks.
+- **Secure isolation** - Patient data stays in containerized environments with filesystem isolation
+- **Medical imaging support** - DICOM, NIfTI, whole slide imaging, and microscopy analysis
+- **Genomic analysis** - Variant calling, sequence alignment, gene expression analysis
+- **Clinical integration** - HL7/FHIR support, EHR integration capabilities
+- **Research workflows** - Batch processing, pipeline automation, reproducible analysis
+- **Lightweight architecture** - Small codebase you can understand and audit for compliance
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/qwibitai/nanoclaw.git
-cd NanoClaw
+git clone https://github.com/taotianli/MedClaw.git
+cd MedClaw
 claude
 ```
 
-Then run `/setup`. Claude Code handles everything: dependencies, authentication, container setup and service configuration.
+Then run `/setup`. Claude Code handles dependencies, medical tool installation, container setup, and service configuration.
 
-> **Note:** Commands prefixed with `/` (like `/setup`, `/add-whatsapp`) are [Claude Code skills](https://code.claude.com/docs/en/skills). Type them inside the `claude` CLI prompt, not in your regular terminal.
+> **Note:** Commands prefixed with `/` (like `/setup`) are [Claude Code skills](https://code.claude.com/docs/en/skills). Type them inside the `claude` CLI prompt.
 
-## Philosophy
+See [Quick Start Guide](docs/QUICK_START.md) for detailed instructions.
 
-**Small enough to understand.** One process, a few source files and no microservices. If you want to understand the full NanoClaw codebase, just ask Claude Code to walk you through it.
+## Medical Capabilities
 
-**Secure by isolation.** Agents run in Linux containers (Apple Container on macOS, or Docker) and they can only see what's explicitly mounted. Bash access is safe because commands run inside the container, not on your host.
+### Medical Imaging
+- **DICOM processing** - Read, analyze, and convert DICOM files
+- **NIfTI analysis** - Brain imaging, fMRI, structural MRI processing
+- **Whole slide imaging** - Digital pathology, histology analysis
+- **Image segmentation** - Organ, tumor, and tissue segmentation
+- **3D reconstruction** - CT/MRI volume rendering and analysis
+- **Image registration** - Multi-modal image alignment
 
-**Built for the individual user.** NanoClaw isn't a monolithic framework; it's software that fits each user's exact needs. Instead of becoming bloatware, NanoClaw is designed to be bespoke. You make your own fork and have Claude Code modify it to match your needs.
+### Genomic Analysis
+- **Variant analysis** - VCF parsing, annotation, filtering
+- **Sequence alignment** - BAM/SAM file processing, quality control
+- **Gene expression** - RNA-seq analysis, differential expression
+- **Genome assembly** - De novo assembly, scaffolding
+- **Phylogenetic analysis** - Tree building, evolutionary analysis
+- **Annotation** - Gene prediction, functional annotation
 
-**Customization = code changes.** No configuration sprawl. Want different behavior? Modify the code. The codebase is small enough that it's safe to make changes.
+### Clinical Tools
+- **HL7/FHIR** - Healthcare data exchange standards
+- **EHR integration** - Electronic health record connectivity
+- **Clinical decision support** - Evidence-based recommendations
+- **Report generation** - Structured clinical reports
+- **Data anonymization** - HIPAA-compliant de-identification
 
-**AI-native.**
-- No installation wizard; Claude Code guides setup.
-- No monitoring dashboard; ask Claude what's happening.
-- No debugging tools; describe the problem and Claude fixes it.
+## Medical Tools & Libraries
 
-**Skills over features.** Instead of adding features (e.g. support for Telegram) to the codebase, contributors submit [claude code skills](https://code.claude.com/docs/en/skills) like `/add-telegram` that transform your fork. You end up with clean code that does exactly what you need.
+MedClaw includes pre-configured medical analysis tools:
 
-**Best harness, best model.** NanoClaw runs on the Claude Agent SDK, which means you're running Claude Code directly. Claude Code is highly capable and its coding and problem-solving capabilities allow it to modify and expand NanoClaw and tailor it to each user.
+**Imaging:**
+- pydicom - DICOM file handling
+- nibabel - Neuroimaging data I/O
+- SimpleITK - Image analysis and registration
+- scikit-image - Image processing algorithms
+- OpenSlide - Whole slide imaging
+- 3D Slicer integration - Advanced visualization
 
-## What It Supports
+**Genomics:**
+- BioPython - Sequence analysis
+- pysam - SAM/BAM file manipulation
+- PyVCF - VCF file parsing
+- scikit-bio - Bioinformatics algorithms
+- GATK integration - Variant calling pipelines
+- Samtools/BCFtools - Sequence data processing
 
-- **Multi-channel messaging** - Talk to your assistant from WhatsApp, Telegram, Discord, Slack, or Gmail. Add channels with skills like `/add-whatsapp` or `/add-telegram`. Run one or many at the same time.
-- **Isolated group context** - Each group has its own `CLAUDE.md` memory, isolated filesystem, and runs in its own container sandbox with only that filesystem mounted to it.
-- **Main channel** - Your private channel (self-chat) for admin control; every group is completely isolated
-- **Scheduled tasks** - Recurring jobs that run Claude and can message you back
-- **Web access** - Search and fetch content from the Web
-- **Container isolation** - Agents are sandboxed in Apple Container (macOS) or Docker (macOS/Linux)
-- **Agent Swarms** - Spin up teams of specialized agents that collaborate on complex tasks. NanoClaw is the first personal AI assistant to support agent swarms.
-- **Optional integrations** - Add Gmail (`/add-gmail`) and more via skills
+**Machine Learning:**
+- TensorFlow/PyTorch - Deep learning frameworks
+- MONAI - Medical imaging AI toolkit
+- DeepVariant - Genomic variant calling
+- nnU-Net - Medical image segmentation
 
-## Usage
+**Clinical:**
+- FHIR-py - FHIR resource handling
+- HL7apy - HL7 message processing
+- Presidio - Data anonymization
 
-Talk to your assistant with the trigger word (default: `@Andy`):
+## Usage Examples
+
+Talk to your medical assistant with the trigger word (default: `@MedClaw`):
 
 ```
-@Andy send an overview of the sales pipeline every weekday morning at 9am (has access to my Obsidian vault folder)
-@Andy review the git history for the past week each Friday and update the README if there's drift
-@Andy every Monday at 8am, compile news on AI developments from Hacker News and TechCrunch and message me a briefing
+@MedClaw analyze this DICOM series and identify any abnormalities in the CT scan
+@MedClaw process these VCF files and generate a variant report for pathogenic mutations
+@MedClaw segment the tumor regions from this MRI scan and calculate volumes
+@MedClaw align these RNA-seq reads and perform differential expression analysis
+@MedClaw convert this whole slide image to a pyramidal TIFF and extract tissue regions
+@MedClaw every Monday at 8am, check for new imaging studies and generate quality control reports
 ```
 
-From the main channel (your self-chat), you can manage groups and tasks:
+From the main channel, manage analysis workflows:
 ```
-@Andy list all scheduled tasks across groups
-@Andy pause the Monday briefing task
-@Andy join the Family Chat group
+@MedClaw list all scheduled genomic pipeline tasks
+@MedClaw pause the weekly imaging QC task
+@MedClaw show me the status of the variant calling pipeline
 ```
+
+## Documentation
+
+- [Quick Start Guide](docs/QUICK_START.md) - Get started in 5 minutes
+- [Setup Guide](docs/SETUP_GUIDE.md) - Detailed installation and configuration
+- [Medical Analysis Guide](docs/MEDICAL_ANALYSIS_GUIDE.md) - Workflow examples and tutorials
+- [Medical Data Formats](docs/MEDICAL_DATA_FORMATS.md) - Supported file formats
+- [Security & Compliance](docs/SECURITY.md) - HIPAA/GDPR considerations
+
+## Security & Compliance
+
+**HIPAA Considerations:**
+- Container isolation protects patient data
+- Audit logging for all data access
+- Data anonymization tools included
+- Encrypted storage recommendations
+- Access control via filesystem mounts
+
+**Best Practices:**
+- Review the codebase for compliance requirements
+- Configure appropriate data retention policies
+- Use encrypted volumes for sensitive data
+- Implement proper authentication for channels
+- Regular security audits
+
+See [docs/SECURITY.md](docs/SECURITY.md) for detailed security model.
 
 ## Customizing
 
-NanoClaw doesn't use configuration files. To make changes, just tell Claude Code what you want:
+MedClaw is designed to be customized for your specific medical workflows:
 
-- "Change the trigger word to @Bob"
-- "Remember in the future to make responses shorter and more direct"
-- "Add a custom greeting when I say good morning"
-- "Store conversation summaries weekly"
+- "Add support for analyzing PET/CT fusion images"
+- "Integrate with our hospital's PACS system"
+- "Create a pipeline for automated lung nodule detection"
+- "Add support for single-cell RNA-seq analysis"
+- "Generate structured radiology reports in our template format"
 
 Or run `/customize` for guided changes.
 
-The codebase is small enough that Claude can safely modify it.
+## Architecture
 
-## Contributing
+```
+Channels --> SQLite --> Polling loop --> Container (Claude Agent SDK + Medical Tools) --> Response
+```
 
-**Don't add features. Add skills.**
+Single Node.js process with medical analysis tools running in isolated containers. Only mounted medical data directories are accessible. Per-group message queue with concurrency control.
 
-If you want to add Telegram support, don't create a PR that adds Telegram alongside WhatsApp. Instead, contribute a skill file (`.claude/skills/add-telegram/SKILL.md`) that teaches Claude Code how to transform a NanoClaw installation to use Telegram.
+Key files:
+- `src/index.ts` - Orchestrator: state, message loop, agent invocation
+- `src/channels/registry.ts` - Channel registry (self-registration)
+- `src/container-runner.ts` - Spawns agent containers with medical tools
+- `container/medical-tools/` - Medical imaging and genomics tool configurations
+- `groups/*/CLAUDE.md` - Per-group medical context and memory
 
-Users then run `/add-telegram` on their fork and get clean code that does exactly what they need, not a bloated system trying to support every use case.
+For full architecture details, see [docs/SPEC.md](docs/SPEC.md).
 
-### RFS (Request for Skills)
+## Medical Data Formats Supported
 
-Skills we'd like to see:
+**Imaging:**
+- DICOM (.dcm, .dicom)
+- NIfTI (.nii, .nii.gz)
+- NRRD (.nrrd)
+- Analyze (.hdr, .img)
+- TIFF/BigTIFF (.tif, .tiff)
+- SVS, NDPI (whole slide formats)
 
-**Communication Channels**
-- `/add-signal` - Add Signal as a channel
+**Genomics:**
+- FASTQ (.fastq, .fq, .fastq.gz)
+- FASTA (.fasta, .fa, .fna)
+- SAM/BAM/CRAM (.sam, .bam, .cram)
+- VCF/BCF (.vcf, .vcf.gz, .bcf)
+- GFF/GTF (.gff, .gtf)
+- BED (.bed)
 
-**Session Management**
-- `/clear` - Add a `/clear` command that compacts the conversation (summarizes context while preserving critical information in the same session). Requires figuring out how to trigger compaction programmatically via the Claude Agent SDK.
+**Clinical:**
+- HL7 v2 messages
+- FHIR JSON/XML
+- CDA documents
+
+See [docs/MEDICAL_DATA_FORMATS.md](docs/MEDICAL_DATA_FORMATS.md) for complete format specifications.
 
 ## Requirements
 
 - macOS or Linux
 - Node.js 20+
 - [Claude Code](https://claude.ai/download)
-- [Apple Container](https://github.com/apple/container) (macOS) or [Docker](https://docker.com/products/docker-desktop) (macOS/Linux)
+- [Docker](https://docker.com/products/docker-desktop) (for container isolation)
+- Python 3.9+ (for medical analysis tools)
+- 16GB+ RAM recommended for imaging analysis
+- GPU recommended for deep learning tasks
 
-## Architecture
+## Contributing
 
-```
-Channels --> SQLite --> Polling loop --> Container (Claude Agent SDK) --> Response
-```
+**Add medical analysis skills, not features.**
 
-Single Node.js process. Channels are added via skills and self-register at startup — the orchestrator connects whichever ones have credentials present. Agents execute in isolated Linux containers with filesystem isolation. Only mounted directories are accessible. Per-group message queue with concurrency control. IPC via filesystem.
+Contribute skills that teach Claude Code how to add medical capabilities:
 
-For the full architecture details, see [docs/SPEC.md](docs/SPEC.md).
+- `/add-pacs-integration` - Connect to PACS systems
+- `/add-pathology-viewer` - Whole slide image viewer
+- `/add-variant-pipeline` - Automated variant calling
+- `/add-dicom-router` - DICOM networking and routing
+- `/add-clinical-nlp` - Extract information from clinical notes
 
-Key files:
-- `src/index.ts` - Orchestrator: state, message loop, agent invocation
-- `src/channels/registry.ts` - Channel registry (self-registration at startup)
-- `src/ipc.ts` - IPC watcher and task processing
-- `src/router.ts` - Message formatting and outbound routing
-- `src/group-queue.ts` - Per-group queue with global concurrency limit
-- `src/container-runner.ts` - Spawns streaming agent containers
-- `src/task-scheduler.ts` - Runs scheduled tasks
-- `src/db.ts` - SQLite operations (messages, groups, sessions, state)
-- `groups/*/CLAUDE.md` - Per-group memory
+### RFS (Request for Skills)
+
+Medical skills we'd like to see:
+
+**Imaging Analysis**
+- `/add-brain-segmentation` - Automated brain structure segmentation
+- `/add-lung-nodule-detection` - CT lung nodule detection pipeline
+- `/add-cardiac-analysis` - Cardiac MRI analysis tools
+
+**Genomics**
+- `/add-somatic-pipeline` - Cancer somatic variant calling
+- `/add-rna-seq-pipeline` - Complete RNA-seq analysis workflow
+- `/add-metagenomics` - Microbiome analysis tools
+
+**Clinical Integration**
+- `/add-ehr-connector` - EHR system integration
+- `/add-radiology-reporting` - Structured report generation
+- `/add-clinical-trials` - Clinical trial data management
 
 ## FAQ
 
-**Why Docker?**
+**Is this HIPAA compliant?**
 
-Docker provides cross-platform support (macOS, Linux and even Windows via WSL2) and a mature ecosystem. On macOS, you can optionally switch to Apple Container via `/convert-to-apple-container` for a lighter-weight native runtime.
+MedClaw provides technical safeguards (container isolation, audit logging, encryption support), but HIPAA compliance requires organizational policies, business associate agreements, and proper implementation. Review the codebase and implement appropriate controls for your use case.
 
-**Can I run this on Linux?**
+**Can I use this for clinical diagnosis?**
 
-Yes. Docker is the default runtime and works on both macOS and Linux. Just run `/setup`.
+MedClaw is a research and analysis tool. Any clinical use requires proper validation, regulatory approval, and oversight by qualified healthcare professionals. Always follow applicable regulations and guidelines.
 
-**Is this secure?**
+**What about data privacy?**
 
-Agents run in containers, not behind application-level permission checks. They can only access explicitly mounted directories. You should still review what you're running, but the codebase is small enough that you actually can. See [docs/SECURITY.md](docs/SECURITY.md) for the full security model.
+All analysis runs in isolated containers. Patient data never leaves your system unless you explicitly configure external integrations. Use encrypted storage and proper access controls.
 
-**Why no configuration files?**
+**Can I integrate with our hospital systems?**
 
-We don't want configuration sprawl. Every user should customize NanoClaw so that the code does exactly what they want, rather than configuring a generic system. If you prefer having config files, you can tell Claude to add them.
+Yes. MedClaw can be customized to integrate with PACS, EHR, LIS, and other clinical systems. Use skills or custom code to add integrations.
 
-**Can I use third-party or open-source models?**
+**How do I process large imaging datasets?**
 
-Yes. NanoClaw supports any Claude API-compatible model endpoint. Set these environment variables in your `.env` file:
-
-```bash
-ANTHROPIC_BASE_URL=https://your-api-endpoint.com
-ANTHROPIC_AUTH_TOKEN=your-token-here
-```
-
-This allows you to use:
-- Local models via [Ollama](https://ollama.ai) with an API proxy
-- Open-source models hosted on [Together AI](https://together.ai), [Fireworks](https://fireworks.ai), etc.
-- Custom model deployments with Anthropic-compatible APIs
-
-Note: The model must support the Anthropic API format for best compatibility.
-
-**How do I debug issues?**
-
-Ask Claude Code. "Why isn't the scheduler running?" "What's in the recent logs?" "Why did this message not get a response?" That's the AI-native approach that underlies NanoClaw.
-
-**Why isn't the setup working for me?**
-
-If you have issues, during setup, Claude will try to dynamically fix them. If that doesn't work, run `claude`, then run `/debug`. If Claude finds an issue that is likely affecting other users, open a PR to modify the setup SKILL.md.
-
-**What changes will be accepted into the codebase?**
-
-Only security fixes, bug fixes, and clear improvements will be accepted to the base configuration. That's all.
-
-Everything else (new capabilities, OS compatibility, hardware support, enhancements) should be contributed as skills.
-
-This keeps the base system minimal and lets every user customize their installation without inheriting features they don't want.
+Configure appropriate mount points for your data storage, use batch processing workflows, and consider GPU acceleration for deep learning tasks. The container system supports mounting network storage and high-performance filesystems.
 
 ## Community
 
@@ -196,8 +263,14 @@ Questions? Ideas? [Join the Discord](https://discord.gg/VDdww8qS42).
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for breaking changes and migration notes.
+See [CHANGELOG.md](CHANGELOG.md) for version history and migration notes.
 
 ## License
 
 MIT
+
+**Disclaimer:** MedClaw is provided for research and educational purposes. Not intended for clinical diagnosis or treatment decisions without proper validation and regulatory approval. Users are responsible for compliance with applicable healthcare regulations including HIPAA, GDPR, and local laws.
+
+## Acknowledgments
+
+MedClaw is built on [NanoClaw](https://github.com/qwibitai/nanoclaw) and leverages the excellent work of the medical imaging and bioinformatics open source communities.
